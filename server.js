@@ -4,13 +4,17 @@ const PORT = 3000
 
 
 const logger = (req, res, next) => {
-    console.log("Log", req.originalUrl)
+    // console.log("Log", req.originalUrl)
+    console.log("before")
     next()
     // "next" is a function that you call so the next piece of middleware runs
+    console.log("after")
 }
 
 const auth = (req, res, next) => {
-    req.query.admin === "true" ? next() : res.send("No Auth")
+    req.query.admin === "true" ? (req.admin = "true", next()) : res.send("No Auth")
+    // we are able to pass variables from our middlware to other sections of our controller actions, whether it is another middleware or the final result of our action
+
     // if (req.query.admin === "true"){
     //     next()
     // } else {
@@ -32,6 +36,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/users", auth, (req, res) => {
+    console.log(`User is admin = ${req.admin}`)
     console.log("Users Page")
     res.send("Users Page")
 })
